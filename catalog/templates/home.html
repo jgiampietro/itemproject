@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block body %}
+	<div class="container" id="contentarea">
+		<div class="row" id="maindisplay">
+			<div class="col-6 col-lg-3 d-flex flex-column" id="categories">
+				<h1 class="font-weight-bold">Categories</h1>
+				<ul>
+					{% for category in categories %}
+					<li><a href="{{url_for('categoryDisplay', category_name = category.name)}}">{{category.name}}</a><small>({{category.getNumItems}})</small></li>
+					{% endfor %}
+					{% if login_session.username %}
+					<li><a href="{{url_for('newCat')}}">Add new category</li>
+					{% endif %}
+				</ul>
+			</div>
+			<div class="col-6 col-lg-8 d-flex flex-column" id="things">
+				{% if login_session.username %}
+				<a href="{{url_for('newItem')}}">Add Item</a>
+				{% endif %}
+				<h1 class="font-weight-bold">Latest Items</h1>
+				<ul>
+					{% for item in items %}
+					<li><a href="{{url_for('itemDisplay', category_name = item.getCatName, item_name=item.name)}}">{{item.name}}</a><small>({{item.getCatName}})</small></li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

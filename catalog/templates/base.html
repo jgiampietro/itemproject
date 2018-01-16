@@ -1,0 +1,73 @@
+<!DOCTYPE html lang="en">
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Categories & Things!</title>
+	<link rel="stylesheet" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
+	<link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+</head>
+<body>
+	<div class="container-fluid">
+		<nav class="row py-2" id="navigation">
+			<div class="col-4"></div>
+			<div class="col-4">
+				<h1>Catalog App</h1>
+			</div>
+			<div class="col-4 d-flex justify-content-end">
+				{% if login_session.username %}
+				<a class="btn btn-danger" href="{{url_for('gdisconnect')}}">Logout</a>
+				{% else %}
+				<a class="btn btn-danger" href="{{url_for('showLogin')}}">Login</a>
+				{% endif %}
+			</div>
+		</nav>
+		<br>
+		<a href="{{url_for('home')}}">Go home</a>
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				<h4 class="message">{{message}}</h4>
+			{% endfor %}
+		{% endif %}
+		{% endwith %}
+		
+		{% block body %}
+		{% endblock %}
+	</div>
+
+	<script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.2.1.min.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static', filename='js/tether.min.js')}}"></script>
+	<script type="text/javascript" src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
+	<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+	<script>
+		function signInCallback(authResult) {
+		  if (authResult['code']) {
+		    // Hide the sign-in button now that the user is authorized
+		    $('#signinButton').attr('style', 'display: none');
+		    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+		    $.ajax({
+		      type: 'POST',
+		      url: '/gconnect?state={{STATE}}',
+		      processData: false,
+		      data: authResult['code'],
+		      contentType: 'application/octet-stream; charset=utf-8',
+		      success: function(result) {
+		        // Handle or verify the server response if necessary.
+		        if (result) {
+		          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+		         setTimeout(function() {
+		          window.location.href = "/catalog";
+		         }, 4000);
+		          
+		      } else if (authResult['error']) {
+		    console.log('There was an error: ' + authResult['error']);
+		  } else {
+		        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+		         }
+		      }
+		      
+		  }); } }
+</script>
+</body>
+</html>

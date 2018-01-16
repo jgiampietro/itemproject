@@ -1,0 +1,49 @@
+body {
+	background-color: gainsboro;
+}
+
+li {
+	list-style: none;
+	color: orange;
+	font-size: 1.3rem;
+}
+
+#navigation {
+	background-color: navy;
+	color: white;
+}
+
+#maindisplay {
+	background-color: white;
+	color: navy;
+}
+
+#categories {
+	border-right: 2px solid gainsboro;
+
+}
+
+li small {
+	color: gray;
+	font-size: .8rem;
+	font-style: italic;
+}
+
+.message {
+	color: red;
+	font-style: bold;
+}
+
+@media only screen and (max-width: 761px) {
+	li {
+		font-size: 1rem;
+	}
+
+	h1 {
+		font-size: 1.3rem;
+	}
+
+	#contentarea {
+		width: 100%;
+	}
+}

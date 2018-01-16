@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container" id="contentarea">
+	<div class="row" id="maindisplay">
+		<div class="col-12">
+			<h3>Add a New Item</h3>
+			<form action="{{url_for('newItem')}}" method="post">
+				<div class="form-group">
+					<label for="name">Item's Name: </label>
+					<input type="text" name="name" class="form-control" id="name" placeholder="Item's Name" required>
+				</div>
+				<div class="form-group">
+					<label for="category">Item's Category: </label>
+					<select class="form-control" name="category" id="category" required>
+						<option disabled selected>--</option>
+						{% for category in categories %}
+						<option value="{{category.id}}">{{category.name}}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="description">Description: </label>
+					<textarea class="form-control" name="description" id="description"></textarea>
+				</div>
+				<input type="submit" class="btn btn-primary btn-lg" value="Add" name="additem">
+			</form>
+		</div>
+	</div>
+</div>
+{% endblock %}

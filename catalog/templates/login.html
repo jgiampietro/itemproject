@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container" id="contentarea">
+	<div class="row" id="maindisplay">
+		<div class="col-12">
+			<h3 class="text-center">Welcome! Please Login</h3>
+			<h5>You must use your google account:</h5>
+			<div id="signinButton" class="mt-1">
+				<span class="g-signin"
+				data-scope="openid email"
+				data-clientid="816283060883-ag22qp1463dh89p7sdmipjsembvn58nh.apps.googleusercontent.com"
+				data-redirecturi="postmessage"
+				data-accesstype="offline"
+				data-cookiepolicy="single_host_origin"
+				data-callback="signInCallback"
+				data-approvalprompt="force">
+			</span>
+			</div>
+			<div id="result">
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
