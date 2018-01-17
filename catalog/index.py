@@ -43,6 +43,7 @@ def home():
                            items=items,
                            login_session=login_session)
 
+
 # Login Page
 @app.route('/login')
 def showLogin():
@@ -53,6 +54,7 @@ def showLogin():
     return render_template("login.html",
                            STATE=state,
                            login_session=login_session)
+
 
 # Handler for using Google to log in
 @app.route('/gconnect', methods=['POST'])
@@ -84,49 +86,47 @@ def gconnect():
     gplus_id = credentials.id_token['sub']
     # Make sure userid matches google token
     if result['user_id'] != gplus_id:
-        response = make_response(json.dumps
-                                 ("Token's user id"
-                                  "does not match given user id"),
+        response = make_response(json.dumps("Token's user id"
+                                            "does not match given user id"),
                                  401)
         response.headers['Content-Type'] = 'application/json'
         return response
-        if result['issued_to'] != CLIENT_ID:
-            response = make_response(json.dumps
-                                     ("Token's client id"
-                                      "does not match app id"),
-                                     401)
-            print "Token's client id does not match apps id"
-            response.headers['Content-Type'] = 'application/json'
-            return response
-        stored_access_token = login_session.get('access_token')
-        stored_gplus_id = login_session.get('gplus_id')
-        if stored_access_token is not None and gplus_id == stored_gplus_id:
-            response = make_response(json.dumps
-                                     ('Current user is already connected'),
-                                     200)
-            response.headers['Content-Type'] = 'application/json'
-            return response
+    if result['issued_to'] != CLIENT_ID:
+        response = make_response(json.dumps("Token's client id"
+                                            "does not match app id"),
+                                 401)
+        print "Token's client id does not match apps id"
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    stored_access_token = login_session.get('access_token')
+    stored_gplus_id = login_session.get('gplus_id')
+    if stored_access_token is not None and gplus_id == stored_gplus_id:
+        response = make_response(json.dumps('Current user'
+                                            'is already connected'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
-        # Authorized so now set session parameters
-        login_session['access_token'] = credentials.access_token
-        login_session['gplus_id'] = gplus_id
-        userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
-        params = {'access_token': credentials.access_token, 'alt': 'json'}
-        answer = requests.get(userinfo_url, params=params)
-        data = json.loads(answer.text)
-        login_session['username'] = data['name']
-        login_session['picture'] = data['picture']
-        login_session['email'] = data['email']
+    # Authorized so now set session parameters
+    login_session['access_token'] = credentials.access_token
+    login_session['gplus_id'] = gplus_id
+    userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
+    params = {'access_token': credentials.access_token, 'alt': 'json'}
+    answer = requests.get(userinfo_url, params=params)
+    data = json.loads(answer.text)
+    login_session['username'] = data['name']
+    login_session['picture'] = data['picture']
+    login_session['email'] = data['email']
 
-        output = ''
-        output += '<h1>Welcome, '
-        output += login_session['username']
-        output += '!</h1>'
-        output += '<img src="'
-        output += login_session['picture']
-        output += '" style="width:300px; height:300px;border-radius:150px;">'
-        flash("you are now logged in as %s" % login_session['username'])
-        return output
+    output = ''
+    output += '<h1>Welcome, '
+    output += login_session['username']
+    output += '!</h1>'
+    output += '<img src="'
+    output += login_session['picture']
+    output += '" style="width:300px; height:300px;border-radius:150px;">'
+    flash("you are now logged in as %s" % login_session['username'])
+    return output
+
 
 # For when a user logs out. Destroy session variables.
 @app.route('/gdisconnect')
@@ -217,6 +217,7 @@ def newCat():
         return render_template("newcategory.html",
                                login_session=login_session)
 
+
 # This page allows you to view all the items for a user-selected category
 @app.route('/catalog/<category_name>', methods=['GET', 'POST'])
 def categoryDisplay(category_name):
@@ -229,7 +230,9 @@ def categoryDisplay(category_name):
                            items=items,
                            login_session=login_session)
 
-# This page lets you view the details for a given item. If you are the items creator
+
+# This page lets you view the details for a given item.
+# If you are the items creator
 # you may edit or delete the item from this page
 @app.route('/catalog/<category_name>/<item_name>', methods=['GET', 'POST'])
 def itemDisplay(category_name, item_name):
@@ -238,7 +241,9 @@ def itemDisplay(category_name, item_name):
                            item=item,
                            login_session=login_session)
 
-# Delete an item. Checks to make sure user is logged in and matches creator first
+
+# Delete an item. Checks to make sure
+# user is logged in and matches creator first
 @app.route('/catalog/<category_name>/<item_name>/delete',
            methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
@@ -296,17 +301,20 @@ def editItem(category_name, item_name):
                                item=item,
                                login_session=login_session)
 
+
 # JSON endpoint for all categories
 @app.route('/catalog/categories/json')
 def catalogJSON():
     categories = session.query(Categories).all()
     return jsonify(categories=[c.serialize for c in categories])
 
+
 # JSON endpoint for all items
 @app.route('/catalog/items/json')
 def itemsJSON():
     items = session.query(Items).all()
     return jsonify(items=[item.serialize for item in items])
+
 
 # JSON endpoint for all items of a certain category
 @app.route('/catalog/<category_name>/json')
