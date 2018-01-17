@@ -219,7 +219,7 @@ def newCat():
 
 
 # This page allows you to view all the items for a user-selected category
-@app.route('/catalog/<category_name>', methods=['GET', 'POST'])
+@app.route('/catalog/<string:category_name>', methods=['GET', 'POST'])
 def categoryDisplay(category_name):
     category = session.query(Categories).filter_by(name=category_name).one()
     categories = session.query(Categories).all()
@@ -234,7 +234,8 @@ def categoryDisplay(category_name):
 # This page lets you view the details for a given item.
 # If you are the items creator
 # you may edit or delete the item from this page
-@app.route('/catalog/<category_name>/<item_name>', methods=['GET', 'POST'])
+@app.route('/catalog/<string:category_name>/<string:item_name>',
+           methods=['GET', 'POST'])
 def itemDisplay(category_name, item_name):
     item = session.query(Items).filter_by(name=item_name).one()
     return render_template("itemdisplay.html",
@@ -244,7 +245,7 @@ def itemDisplay(category_name, item_name):
 
 # Delete an item. Checks to make sure
 # user is logged in and matches creator first
-@app.route('/catalog/<category_name>/<item_name>/delete',
+@app.route('/catalog/<string:category_name>/<string:item_name>/delete',
            methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
     if 'username' not in login_session:
@@ -261,7 +262,7 @@ def deleteItem(category_name, item_name):
 
 
 # Edit an item. Again, checks to ensure user is logged in and is the creator
-@app.route('/catalog/<category_name>/<item_name>/edit',
+@app.route('/catalog/<string:category_name>/<string:item_name>/edit',
            methods=['GET', 'POST'])
 def editItem(category_name, item_name):
     if 'username' not in login_session:
@@ -316,7 +317,7 @@ def itemsJSON():
 
 
 # JSON endpoint for all items of a certain category
-@app.route('/catalog/<category_name>/json')
+@app.route('/catalog/<string:category_name>/json')
 def catItemJSON(category_name):
     try:
         category = session.query(Categories)\
