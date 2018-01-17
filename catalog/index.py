@@ -273,10 +273,9 @@ def editItem(category_name, item_name):
         return redirect(url_for('home'))
     categories = session.query(Categories).all()
 
-    if request.method is 'POST':
-        name = request.form['name']
+    if request.method == 'POST':
         dupeItem = session.query(Items)\
-            .filter(Items.name == name)\
+            .filter(Items.name == request.form['name'])\
             .filter(Items.id != item.id).first()
         if dupeItem is None:
             item.name = request.form['name']
@@ -286,11 +285,11 @@ def editItem(category_name, item_name):
             session.commit()
             flash("Item successfully saved!")
             return redirect(url_for('itemDisplay',
-                                    category_name=item.getCatName,
-                                    item_name=item.name))
+                            category_name=item.getCatName,
+                            item_name=item.name))
         else:
-            flash("An item with that same name already"
-                  "exists in this category!")
+            flash("An item with that same name"
+                  "already exists in this category!")
             return render_template("edititem.html",
                                    categories=categories,
                                    item=item,
